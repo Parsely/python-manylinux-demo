@@ -22,7 +22,7 @@ xz-devel gpg atlas-devel libev-devel libev snappy-devel freetype-devel \
 libpng-devel libffi-devel python-lxml postgresql95-libs \
 postgresql95-devel lapack-devel python \
 python-devel python-setuptools pcre pcre-devel \
-pandoc
+pandoc postgresql-devel
 
 # psycopg2 won't build without this
 export PG_HOME=/usr/pgsql-9.5
