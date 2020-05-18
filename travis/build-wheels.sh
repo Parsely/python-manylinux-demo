@@ -22,11 +22,13 @@ xz-devel gpg atlas-devel libev-devel libev snappy-devel freetype-devel \
 libpng-devel libffi-devel python-lxml postgresql95-libs \
 postgresql95-devel lapack-devel python \
 python-devel python-setuptools pcre pcre-devel \
-pandoc postgresql-devel
+pandoc
 
 # psycopg2 won't build without this
-export PG_HOME=/usr/pgsql-9.5
-export PATH=/usr/pgsql-9.5/bin:$PATH
+rpm -i https://download.postgresql.org/pub/repos/yum/reporpms/EL-6-x86_64/pgdg-redhat-repo-latest.noarch.rpm
+yum install -y postgresql96-devel
+export PG_HOME=/usr/pgsql-9.6
+export PATH=/usr/pgsql-9.6/bin:$PATH
 
 # Compile wheels
 for PYBIN in /opt/python/*/bin; do
