@@ -25,10 +25,13 @@ python-devel python-setuptools pcre pcre-devel \
 pandoc
 
 # psycopg2 won't build without this
-rpm -i https://download.postgresql.org/pub/repos/yum/reporpms/EL-6-x86_64/pgdg-redhat-repo-latest.noarch.rpm
-yum install -y postgresql96-devel
-export PG_HOME=/usr/pgsql-9.6
-export PATH=/usr/pgsql-9.6/bin:$PATH
+releasever=$(cat /etc/redhat-release | cut -d'.' -f1 | cut -d' ' -f3)
+yum install -y libxslt-devel
+curl https://parsely-public.s3.amazonaws.com/packages/rpm/pgdg95-centos${releasever}.tar.gz -o /tmp/pgdg95-centos${releasever}.tar.gz
+tar -zxf /tmp/pgdg95-centos${releasever}.tar.gz -C /tmp
+rpm -ivh /tmp/pgdg95-centos${releasever}/*
+export PG_HOME=/usr/pgsql-9.5
+export PATH=/usr/pgsql-9.5/bin:$PATH
 
 # Compile wheels
 for PYBIN in /opt/python/*/bin; do
