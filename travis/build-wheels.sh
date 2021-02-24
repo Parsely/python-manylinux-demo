@@ -45,11 +45,12 @@ for PYBIN in /opt/python/*/bin; do
     else
         "${PYBIN}/pip" install --upgrade --upgrade-strategy only-if-needed pip auditwheel
         CFLAGS="-I/usr/local/ssl/include" LDFLAGS="-L/usr/local/ssl/lib" ${PYBIN}/pip wheel --prefer-binary cryptography -w /io/wheelhouse/ -f /io/wheelhouse
-        "${PYBIN}/pip" wheel --prefer-binary -r /io/dev-requirements.txt -w /io/wheelhouse/ -f /io/wheelhouse || true
+        # Run a separate pip per package to make it not get stuck resolving dependency conflicts forever
+        cat /io/dev-requirements.txt | tr '\n' '\0' | xargs -0 -I{} -P4 bash -c "${PYBIN}/pip wheel --prefer-binary {} -w /io/wheelhouse/ -f /io/wheelhouse || true"
         # Do another run allowing dev builds, and do it with a separate run per
         # requirement so that one broken prerelease doesn't stop the rest from
         # being build---I'm looking at *you* statsmodel 0.8.0rc1
-        cat /io/dev-requirements.txt | tr '\n' '\0' | xargs -0 -I{} bash -c "${PYBIN}/pip wheel --prefer-binary --pre {} -w /io/wheelhouse/ -f /io/wheelhouse || true"
+        cat /io/dev-requirements.txt | tr '\n' '\0' | xargs -0 -I{} -P4 bash -c "${PYBIN}/pip wheel --prefer-binary --pre {} -w /io/wheelhouse/ -f /io/wheelhouse || true"
     fi
 done
 
